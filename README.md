@@ -1,6 +1,6 @@
 # Articulate
 
-A data-mapper ORM that serves as an alternative to Eloquent.
+A data mapper ORM that serves as an alternative to Eloquent.
 
 ![PHP Version](https://img.shields.io/badge/php-8.2-blue)
 ![GitHub Release](https://img.shields.io/github/v/release/ollieread/articulate)
