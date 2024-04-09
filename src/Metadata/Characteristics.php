@@ -20,6 +20,7 @@ use Articulate\Metadata\Characteristics\Medium;
 use Articulate\Metadata\Characteristics\NeverNull;
 use Articulate\Metadata\Characteristics\Nullable;
 use Articulate\Metadata\Characteristics\Precise;
+use Articulate\Metadata\Characteristics\PrimaryKey;
 use Articulate\Metadata\Characteristics\Small;
 use Articulate\Metadata\Characteristics\SpatiallyIndexed;
 use Articulate\Metadata\Characteristics\Tiny;
@@ -227,5 +228,10 @@ final class Characteristics
     public static function first(): First
     {
         return self::make(First::class);
+    }
+
+    public static function primary(): PrimaryKey
+    {
+        return self::make(PrimaryKey::class);
     }
 }

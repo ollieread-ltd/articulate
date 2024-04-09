@@ -133,4 +133,9 @@ trait AddsCharacteristics
     {
         return $this->characteristic(Characteristics::first());
     }
+
+    public function primary(): static
+    {
+        return $this->characteristic(Characteristics::primary());
+    }
 }
