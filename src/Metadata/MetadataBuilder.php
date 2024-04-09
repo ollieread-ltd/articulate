@@ -410,9 +410,7 @@ final class MetadataBuilder
      */
     public function build(): EntityMetadataContract|ComponentMetadataContract
     {
-        if ($this->enrich && $this->enrichment === false) {
-            $this->enrich();
-        }
+        $this->enrich();
 
         if ($this->entity) {
             return $this->buildEntityMetadata();
@@ -430,12 +428,26 @@ final class MetadataBuilder
      */
     public function enrich(): self
     {
-        $this->enrichClass();
-        $this->enrichFields();
+        if ($this->shouldEnrich()) {
+            $this->enrichClass();
+            $this->enrichFields();
 
-        $this->enrichment = true;
+            $this->enrichment = true;
+        }
 
         return $this;
+    }
+
+    /**
+     * Should enrichment be performed
+     *
+     * @return bool
+     */
+    private function shouldEnrich(): bool
+    {
+        return $this->enrich
+               && $this->enrichment === false
+               && config('articulate.enrichment', true);
     }
 
     /**
