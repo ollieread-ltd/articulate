@@ -46,50 +46,50 @@ return [
             Types\Properties\IntegerPropertyType::class,
             Types\Properties\StringPropertyType::class,
             // Property class types
-            Types\Properties\CarbonPropertyType::class,
-            Types\Properties\DateTimePropertyType::class,
+            Types\Properties\Classes\CarbonPropertyType::class,
+            Types\Properties\Classes\DateTimePropertyType::class,
+        ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Default types
+        |--------------------------------------------------------------------------
+        |
+        | Some property types will have default column types and vice verse, this
+        | is where they're mapped.
+        |
+        */
+
+        'defaults' => [
+
+            // Property types to column types
+            'property' => [
+                Types\Properties\BooleanPropertyType::NAME        => Types\Columns\BooleanColumnType::NAME,
+                Types\Properties\IntegerPropertyType::NAME        => Types\Columns\IntegerColumnType::NAME,
+                Types\Properties\ArrayPropertyType::NAME          => Types\Columns\JsonColumnType::NAME,
+                Types\Properties\StringPropertyType::NAME         => Types\Columns\StringColumnType::NAME,
+                Types\Properties\Classes\CarbonPropertyType::NAME => Types\Columns\TimestampColumnType::NAME,
+            ],
+
+            // Column types to property types
+            'column'   => [
+                Types\Columns\BooleanColumnType::NAME   => Types\Properties\BooleanPropertyType::NAME,
+                Types\Columns\IntegerColumnType::NAME   => Types\Properties\IntegerPropertyType::NAME,
+                Types\Columns\JsonColumnType::NAME      => Types\Properties\ArrayPropertyType::NAME,
+                Types\Columns\StringColumnType::NAME    => Types\Properties\StringPropertyType::NAME,
+                Types\Columns\TimestampColumnType::NAME => Types\Properties\Classes\CarbonPropertyType::NAME,
+            ],
+
         ],
 
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Default types
+    | Metadata enrichment
     |--------------------------------------------------------------------------
     |
-    | Some property types will have default column types and vice verse, this
-    | is where they're mapped.
-    |
-    */
-
-    'defaults' => [
-
-        // Property types to column types
-        'property' => [
-            Types\Properties\BooleanPropertyType::NAME => Types\Columns\BooleanColumnType::NAME,
-            Types\Properties\IntegerPropertyType::NAME => Types\Columns\IntegerColumnType::NAME,
-            Types\Properties\ArrayPropertyType::NAME   => Types\Columns\JsonColumnType::NAME,
-            Types\Properties\StringPropertyType::NAME  => Types\Columns\StringColumnType::NAME,
-            Types\Properties\CarbonPropertyType::NAME  => Types\Columns\TimestampColumnType::NAME,
-        ],
-
-        // Column types to property types
-        'column'   => [
-            Types\Columns\BooleanColumnType::NAME   => Types\Properties\BooleanPropertyType::NAME,
-            Types\Columns\IntegerColumnType::NAME   => Types\Properties\IntegerPropertyType::NAME,
-            Types\Columns\JsonColumnType::NAME      => Types\Properties\ArrayPropertyType::NAME,
-            Types\Columns\StringColumnType::NAME    => Types\Properties\StringPropertyType::NAME,
-            Types\Columns\TimestampColumnType::NAME => Types\Properties\CarbonPropertyType::NAME,
-        ],
-
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Mapping inspections
-    |--------------------------------------------------------------------------
-    |
-    | This is where you can enable or disable mapping inspections.
+    | This is where you can enable or disable metadata enrichment.
     | When Articulate maps entities and fields, if this is enabled, the
     | mapper will inspect the class and properties through reflection, and
     | make use of any attributes or other discernible traits that can enrich
@@ -99,7 +99,7 @@ return [
     |
     */
 
-    'inspect' => env('ARTICULATE_INSPECTION', true),
+    'enrichment' => env('ARTICULATE_ENRICHMENT', true),
 
     /*
     |--------------------------------------------------------------------------

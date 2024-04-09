@@ -1,15 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Articulate\Metadata\Types\Properties;
+namespace Articulate\Metadata\Types\Properties\Classes;
 
 use Articulate\Contracts\Field;
 use Articulate\Contracts\Metadata;
 use Articulate\Contracts\PropertyClassType;
-use Articulate\Contracts\PropertyType;
 use Articulate\Metadata\Characteristics\Formatted;
 use Articulate\Metadata\Characteristics\Immutable;
-use Carbon\Carbon;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;

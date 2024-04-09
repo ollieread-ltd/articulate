@@ -2,7 +2,7 @@
 /** @noinspection ClassReImplementsParentInterfaceInspection */
 declare(strict_types=1);
 
-namespace Articulate\Metadata\Types\Properties;
+namespace Articulate\Metadata\Types\Properties\Classes;
 
 use Articulate\Contracts\Field;
 use Articulate\Contracts\Metadata;

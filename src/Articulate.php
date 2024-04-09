@@ -91,7 +91,7 @@ final class Articulate
      */
     private function initialiseDefaultTypeMappings(): void
     {
-        $defaults = $this->app['config']['articulate.defaults'] ?? [];
+        $defaults = $this->app['config']['articulate.types.defaults'] ?? [];
 
         // Register the default property mappings
         foreach ($defaults['property'] as $propertyType => $columnType) {
