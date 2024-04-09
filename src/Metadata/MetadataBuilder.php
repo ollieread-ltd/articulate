@@ -448,7 +448,7 @@ final class MetadataBuilder
     private function enrichClass(): void
     {
         Collection::make(
-            // Get all enrichment attributes
+        // Get all enrichment attributes
             $this->getClassReflection()->getAttributes(Enrichment::class, ReflectionAttribute::IS_INSTANCEOF)
         )->mapWithkeys(function (ReflectionAttribute $attribute) {
             // Turn them into instances and key them by their class
@@ -468,8 +468,19 @@ final class MetadataBuilder
      */
     private function enrichFields(): void
     {
-        Collection::make(
-            // Get all properties
+        $this->collectFieldProperties()->each($this->enrichField(...));
+    }
+
+    /**
+     * Collect all the properties that are considered fields
+     *
+     * @return \Illuminate\Support\Collection<string, \ReflectionProperty>
+     *
+     * @throws \ReflectionException
+     */
+    private function collectFieldProperties(): Collection
+    {
+        return Collection::make(
             $this->getClassReflection()->getProperties()
         )->keyBy(function (ReflectionProperty $property) {
             // Key them by their name
@@ -477,21 +488,30 @@ final class MetadataBuilder
         })->filter(function (ReflectionProperty $property) {
             // Filter out any that aren't fields
             return ! isset($this->fields[$property->getName()])
-                || empty($property->getAttributes(FieldAttribute::class));
-        })->each(function (ReflectionProperty $property) {
-            // Get the existing field or create one
-            $field = $this->fields[$property->getName()] ?? $this->field($property->getName());
+                   || empty($property->getAttributes(FieldAttribute::class));
+        });
+    }
 
-            Collection::make(
-                // Get all enrichment attributes
-                $property->getAttributes(FieldEnrichment::class, ReflectionAttribute::IS_INSTANCEOF)
-            )->mapWithKeys(function (ReflectionAttribute $attribute) {
-                // Turn them into instances and key them by their class
-                return [$attribute->getName() => $attribute->newInstance()];
-            })->each(function (FieldEnrichment $attribute) use ($field) {
-                // Enrich
-                $attribute->enrich($field);
-            });
+    /**
+     * Enrich the metadata for a single field
+     *
+     * @param \ReflectionProperty $property
+     *
+     * @return void
+     */
+    private function enrichField(ReflectionProperty $property): void
+    {
+        // Get the existing field or create one
+        $field = $this->fields[$property->getName()] ?? $this->field($property->getName());
+
+        Collection::make(
+            $property->getAttributes(FieldEnrichment::class, ReflectionAttribute::IS_INSTANCEOF)
+        )->mapWithKeys(function (ReflectionAttribute $attribute) {
+            // Turn them into instances and key them by their class
+            return [$attribute->getName() => $attribute->newInstance()];
+        })->each(function (FieldEnrichment $attribute) use ($field) {
+            // Enrich
+            $attribute->enrich($field);
         });
     }
 
