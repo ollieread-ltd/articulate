@@ -7,13 +7,30 @@ use Articulate\Metadata\MetadataBuilder;
 use Articulate\Metadata\Support\TouchEvent;
 use Workbench\App\Entities\User;
 
+/**
+ * User Mapping
+ *
+ * @extends \Articulate\Metadata\Mapping<\Workbench\App\Entities\User>
+ */
 class UserMapping extends Mapping
 {
+    /**
+     * The class that is being mapped
+     *
+     * @return class-string<\Workbench\App\Entities\User>
+     */
     public function class(): string
     {
         return User::class;
     }
 
+    /**
+     * Map the metadata
+     *
+     * @param \Articulate\Metadata\MetadataBuilder<\Workbench\App\Entities\User> $metadata
+     *
+     * @return void
+     */
     public function map(MetadataBuilder $metadata): void
     {
         // Set the table
