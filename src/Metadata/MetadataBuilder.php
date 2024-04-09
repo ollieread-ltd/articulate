@@ -14,8 +14,8 @@ use Articulate\Metadata\Attributes\Field as FieldAttribute;
 use Articulate\Metadata\Types\Columns\IntegerColumnType;
 use Articulate\Metadata\Types\Properties\ArrayPropertyType;
 use Articulate\Metadata\Types\Properties\BooleanPropertyType;
-use Articulate\Metadata\Types\Properties\CarbonPropertyType;
-use Articulate\Metadata\Types\Properties\DateTimePropertyType;
+use Articulate\Metadata\Types\Properties\Classes\CarbonPropertyType;
+use Articulate\Metadata\Types\Properties\Classes\DateTimePropertyType;
 use Articulate\Metadata\Types\Properties\FloatPropertyType;
 use Articulate\Metadata\Types\Properties\IntegerPropertyType;
 use Articulate\Metadata\Types\Properties\StringPropertyType;
@@ -502,7 +502,7 @@ final class MetadataBuilder
     private function enrichField(ReflectionProperty $property): void
     {
         // Get the existing field or create one
-        $field = $this->fields[$property->getName()] ?? $this->field($property->getName());
+        $field = $this->fields[$property->getName()] ?? $this->fieldForProperty($property);
 
         Collection::make(
             $property->getAttributes(FieldEnrichment::class, ReflectionAttribute::IS_INSTANCEOF)
@@ -513,6 +513,21 @@ final class MetadataBuilder
             // Enrich
             $attribute->enrich($field);
         });
+    }
+
+    /**
+     * Create a new field for a reflected property
+     *
+     * @param \ReflectionProperty $property
+     *
+     * @return \Articulate\Metadata\FieldBuilder
+     */
+    private function fieldForProperty(ReflectionProperty $property): FieldBuilder
+    {
+        return $this->field(
+            $property->getName(),
+            $this->getFieldPropertyTypeUsingReflection($property)->name()
+        );
     }
 
     /**
@@ -675,10 +690,22 @@ final class MetadataBuilder
             return $this->typeManager->property($propertyType);
         }
 
-        $type = $this->getPropertyReflection($propertyName)->getType();
+        return $this->getFieldPropertyTypeUsingReflection($this->getPropertyReflection($propertyName));
+    }
+
+    /**
+     * Get the field type using reflection
+     *
+     * @param \ReflectionProperty $reflection
+     *
+     * @return \Articulate\Contracts\PropertyType<mixed, mixed>
+     */
+    private function getFieldPropertyTypeUsingReflection(ReflectionProperty $reflection): PropertyType
+    {
+        $type = $reflection->getType();
 
         if (! ($type instanceof ReflectionNamedType)) {
-            throw new RuntimeException(sprintf('The property %s in class %s has an invalid type for mapping', $propertyName, $this->class));
+            throw new RuntimeException(sprintf('The property %s in class %s has an invalid type for mapping', $reflection->name, $this->class));
         }
 
         return $this->typeManager->propertyByReflection($type);
