@@ -28,7 +28,7 @@ use ReflectionProperty;
 use RuntimeException;
 
 /**
- *
+ * @template MetaClass of object
  */
 final class MetadataBuilder
 {
@@ -38,7 +38,7 @@ final class MetadataBuilder
     private TypeManager $typeManager;
 
     /**
-     * @var class-string
+     * @var class-string<MetaClass>
      */
     private string $class;
 
@@ -63,7 +63,7 @@ final class MetadataBuilder
     private array $fields = [];
 
     /**
-     * @var \ReflectionClass
+     * @var \ReflectionClass<MetaClass>
      */
     private ReflectionClass $classReflection;
 
@@ -80,7 +80,7 @@ final class MetadataBuilder
     /**
      * Create a new instance of the metadata builder
      *
-     * @param class-string $class
+     * @param class-string<MetaClass> $class
      */
     public function __construct(TypeManager $typeManager, string $class)
     {
@@ -91,7 +91,7 @@ final class MetadataBuilder
     /**
      * Mark the metadata as mapping an entity
      *
-     * @return self
+     * @return static
      */
     public function entity(): self
     {
@@ -103,7 +103,7 @@ final class MetadataBuilder
     /**
      * Make the metadata as mapping a component
      *
-     * @return self
+     * @return static
      */
     public function component(): self
     {
@@ -117,7 +117,7 @@ final class MetadataBuilder
      *
      * @param string $table
      *
-     * @return self
+     * @return static
      */
     public function table(string $table): self
     {
@@ -131,7 +131,7 @@ final class MetadataBuilder
      *
      * @param string $connection
      *
-     * @return self
+     * @return static
      */
     public function connection(string $connection): self
     {
@@ -380,7 +380,7 @@ final class MetadataBuilder
     /**
      * Do not perform enrichment through attributes
      *
-     * @return self
+     * @return static
      */
     public function doNotEnrich(): self
     {
@@ -392,7 +392,7 @@ final class MetadataBuilder
     /**
      * Do perform enrichment through attributes
      *
-     * @return self
+     * @return static
      */
     public function doEnrich(): self
     {
@@ -404,7 +404,7 @@ final class MetadataBuilder
     /**
      * Build the metadata
      *
-     * @return \Articulate\Contracts\EntityMetadata|\Articulate\Contracts\ComponentMetadata
+     * @return \Articulate\Contracts\EntityMetadata<MetaClass>|\Articulate\Contracts\ComponentMetadata<MetaClass>
      *
      * @throws \ReflectionException
      */
@@ -424,7 +424,7 @@ final class MetadataBuilder
     /**
      * Enrich the metadata using attributes
      *
-     * @return self
+     * @return static
      *
      * @throws \ReflectionException
      */
@@ -518,7 +518,7 @@ final class MetadataBuilder
     /**
      * Build the entity metadata
      *
-     * @return \Articulate\Contracts\EntityMetadata
+     * @return \Articulate\Contracts\EntityMetadata<MetaClass>
      *
      * @throws \ReflectionException
      */
@@ -535,7 +535,7 @@ final class MetadataBuilder
     /**
      * Build the component metadata
      *
-     * @return \Articulate\Contracts\ComponentMetadata
+     * @return \Articulate\Contracts\ComponentMetadata<MetaClass>
      *
      * @throws \ReflectionException
      */
@@ -550,7 +550,7 @@ final class MetadataBuilder
     /**
      * Get a reflection instance of the class we're mapping
      *
-     * @return \ReflectionClass
+     * @return \ReflectionClass<MetaClass>
      *
      * @throws \ReflectionException
      */
@@ -619,7 +619,7 @@ final class MetadataBuilder
     /**
      * Build the collection of fields for mapping
      *
-     * @return \Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection<string, \Articulate\Contracts\Field>
      *
      * @throws \ReflectionException
      */
