@@ -1,59 +1,68 @@
 {
-    "name": "ollieread/articulate",
-    "description": "A data-mapper ORM for Laravel that's reminiscent of Eloquent",
-    "keywords": [
-        "laravel",
-        "orm",
-        "articulate",
-        "eloquent",
-        "datamapper",
-        "data-mapper"
-    ],
-    "type": "library",
-    "require": {
-        "php": "^8.2",
-        "laravel/framework": "^11.0"
-    },
-    "require-dev": {
-        "orchestra/testbench": "^9.0",
-        "larastan/larastan": "^2.9",
-        "phpunit/phpunit": "^11.0"
-    },
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Articulate\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "ollieread",
-            "email": "code@ollieread.com"
-        }
-    ],
-    "autoload-dev": {
-        "psr-4": {
-            "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
-            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/",
-            "Workbench\\Database\\Metadata\\": "workbench/database/metadata/"
-        }
-    },
-    "scripts": {
-        "post-autoload-dump": [
-            "@clear",
-            "@prepare"
-        ],
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
-        "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "build": "@php vendor/bin/testbench workbench:build --ansi",
-        "serve": [
-            "Composer\\Config::disableProcessTimeout",
-            "@build",
-            "@php vendor/bin/testbench serve"
-        ],
-        "lint": [
-            "@php vendor/bin/phpstan analyse"
-        ]
+  "name"        : "ollieread/articulate",
+  "description" : "A data-mapper ORM for Laravel that's reminiscent of Eloquent",
+  "keywords"    : [
+    "laravel",
+    "orm",
+    "articulate",
+    "eloquent",
+    "datamapper",
+    "data-mapper"
+  ],
+  "type"        : "library",
+  "require"     : {
+    "php"              : "^8.2",
+    "laravel/framework": "^11.0"
+  },
+  "require-dev" : {
+    "orchestra/testbench": "^9.0",
+    "larastan/larastan"  : "^2.9",
+    "phpunit/phpunit"    : "^11.0",
+    "nunomaduro/collision": "^8.0"
+  },
+  "license"     : "MIT",
+  "autoload"    : {
+    "psr-4": {
+      "Articulate\\": "src/"
     }
+  },
+  "authors"     : [
+    {
+      "name" : "ollieread",
+      "email": "code@ollieread.com"
+    }
+  ],
+  "autoload-dev": {
+    "psr-4": {
+      "Articulate\\Tests\\"             : "tests/",
+      "Workbench\\App\\"                : "workbench/app/",
+      "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+      "Workbench\\Database\\Seeders\\"  : "workbench/database/seeders/",
+      "Workbench\\Database\\Mappings\\" : "workbench/database/mappings/"
+    }
+  },
+  "scripts"     : {
+    "post-autoload-dump": [
+      "@clear",
+      "@prepare"
+    ],
+    "clear"             : "@php vendor/bin/testbench package:purge-skeleton --ansi",
+    "prepare"           : "@php vendor/bin/testbench package:discover --ansi",
+    "build"             : "@php vendor/bin/testbench workbench:build --ansi",
+    "serve"             : [
+      "Composer\\Config::disableProcessTimeout",
+      "@build",
+      "@php vendor/bin/testbench serve"
+    ],
+    "lint"              : [
+      "@php vendor/bin/phpstan analyse"
+    ]
+  },
+  "extra"       : {
+    "laravel": {
+      "providers": [
+        "Articulate\\ArticulateServiceProvider"
+      ]
+    }
+  }
 }

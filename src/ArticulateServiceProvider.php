@@ -12,6 +12,12 @@ class ArticulateServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        // Merge the config
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/articulate.php',
+            'articulate',
+        );
+
         // Register the Articulate class
         $this->app->singleton(Articulate::class);
 
@@ -33,7 +39,16 @@ class ArticulateServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->publishes(
+            [
+                __DIR__ . '/../config/articulate.php' => config_path('articulate.php'),
+            ]
+        );
+
         // Set the connection resolver for the entity metadata
         EntityMetadata::setConnectionResolver($this->app['db']);
+
+        // Map the entities
+        $this->app->make(Articulate::class)->map();
     }
 }

@@ -5,6 +5,7 @@ namespace Articulate;
 
 use Articulate\Managers\MetadataManager;
 use Articulate\Managers\TypeManager;
+use Articulate\Metadata\DiscoverMetadata;
 use Illuminate\Contracts\Foundation\Application;
 
 final class Articulate
@@ -71,15 +72,18 @@ final class Articulate
      */
     private function initialiseTypes(): void
     {
-        $types = $this->app['config']['articulate.types'] ?? [];
+        $types = $this->app['config']['articulate.types'] ?? [
+            'property' => [],
+            'column'  => [],
+        ];
 
         // Register the property types
-        foreach ($types['properties'] as $propertyType) {
+        foreach ($types['property'] as $propertyType) {
             $this->types()->register($propertyType);
         }
 
         // Register the column types
-        foreach ($types['columns'] as $columnType) {
+        foreach ($types['column'] as $columnType) {
             $this->types()->register($columnType);
         }
     }
@@ -91,7 +95,10 @@ final class Articulate
      */
     private function initialiseDefaultTypeMappings(): void
     {
-        $defaults = $this->app['config']['articulate.types.defaults'] ?? [];
+        $defaults = $this->app['config']['articulate.types.defaults'] ?? [
+            'property' => [],
+            'column'  => [],
+        ];
 
         // Register the default property mappings
         foreach ($defaults['property'] as $propertyType => $columnType) {
@@ -102,5 +109,37 @@ final class Articulate
         foreach ($defaults['column'] as $columnType => $propertyType) {
             $this->types()->mapColumnDefaultPropertyType($columnType, $propertyType);
         }
+    }
+
+    public function map(): void
+    {
+        // Fire we'll try and discover all the mappings to be discovered
+        $mappings = $this->discoverMappings();
+
+        // Let's map all the discovered mappings
+        foreach ($mappings as $mapping) {
+            $this->metadata()->map($mapping);
+        }
+
+        // Then we'll get any hardcoded classes
+        $classMappings = $this->app['config']['articulate.mappings.classes'] ?? [];
+
+        // And map those
+        foreach ($classMappings as $classMapping) {
+            $this->metadata()->map($classMapping);
+        }
+    }
+
+    private function discoverMappings(): array
+    {
+        $locations = $this->app['config']['articulate.mappings.discovery'] ?? [];
+
+        $mappings = [];
+
+        foreach ($locations as $namespace => $path) {
+            $mappings[] = DiscoverMetadata::within($path, $namespace);
+        }
+
+        return array_merge(...$mappings);
     }
 }

@@ -81,15 +81,18 @@ final class MetadataManager
     }
 
     /**
-     * @param class-string<\Articulate\Metadata\Mapping> $class
+     * @template EClass of object
      *
-     * @return \Articulate\Contracts\Metadata<object>|null
+     * @param class-string<\Articulate\Metadata\Mapping<EClass>> $class
+     *
+     * @return \Articulate\Contracts\Metadata<EClass>|null
      *
      * @throws \ReflectionException
      */
     public function map(string $class): ?Metadata
     {
         if (! class_exists($class) || ! is_subclass_of($class, Mapping::class)) {
+            // TODO: Throw an exception
             return null;
         }
 
@@ -99,7 +102,7 @@ final class MetadataManager
         // Get a new metadata builder
         $builder = $this->getNewMetadataBuilder($mapping->class());
 
-        // Right now there's no component functionality so we'll default to an entity
+        // Right now there's no component functionality, so we'll default to an entity
         $builder->entity();
 
         // Then, we provide the mapping with the builder
@@ -116,9 +119,11 @@ final class MetadataManager
     }
 
     /**
-     * @param class-string $class
+     * @template EClass of object
      *
-     * @return \Articulate\Metadata\MetadataBuilder
+     * @param class-string<EClass> $class
+     *
+     * @return \Articulate\Metadata\MetadataBuilder<EClass>
      */
     private function getNewMetadataBuilder(string $class): MetadataBuilder
     {

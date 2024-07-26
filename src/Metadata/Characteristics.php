@@ -187,7 +187,7 @@ final class Characteristics
 
     public static function touchable(TouchEvent ...$events): Touchable
     {
-        return self::make(Touchable::class, ...$events);
+        return self::make(Touchable::class, $events);
     }
 
     public static function unique(bool|string|null $name = null): Unique
